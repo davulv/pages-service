@@ -1,0 +1,44 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: Gradle@2
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    tasks: 'build'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    sonarQubeRunAnalysis: false
+- task: Docker@2
+  inputs:
+    containerRegistry: 'docker-conn'
+    repository: 'davulv/pages-service'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    tags: pipeline
+- task: CopyFiles@2
+  inputs:
+      SourceFolder: '$(System.DefaultWorkingDirectory)'
+      Contents: '**/*.yaml'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: KubectlInstaller@0
+  inputs:
+    kubectlVersion: 'latest'
+
+- task: KubernetesManifest@0
+  inputs:
+        action: 'deploy'
+        kubernetesServiceConnection: 'k8-conn'
+        namespace: 'davulv'
+        manifests: '$(System.ArtifactStagingDirectory)/deployment/pages-namespace.yaml|$(System.ArtifactStagingDirectory)/deployment/pages-service.yaml|$(System.ArtifactStagingDirectory)/deployment/pages-config.yaml|$(System.ArtifactStagingDirectory)/deployment/pages-deployment.yaml'
+        containers: 'docker.io/davulv/pages-service:pipeline'
