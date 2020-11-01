@@ -35,11 +35,14 @@ steps:
 - task: KubectlInstaller@0
   inputs:
     kubectlVersion: 'latest'
-
-- task: KubernetesManifest@0
+- task: Kubernetes@1
   inputs:
-        action: 'deploy'
-        kubernetesServiceConnection: 'k8-conn'
-        namespace: 'davulv'
-        manifests: '$(Build.ArtifactStagingDirectory)/deployment/pages-namespace.yaml|$(Build.ArtifactStagingDirectory)/deployment/pages-service.yaml|$(Build.ArtifactStagingDirectory)/deployment/pages-config.yaml|$(Build.ArtifactStagingDirectory)/deployment/pages-deployment.yaml'
-        containers: 'docker.io/davulv/pages-service:pipeline'
+    connectionType: 'Kubernetes Service Connection'
+    kubernetesServiceEndpoint: 'k8-conn'
+    namespace: 'davulv'
+    command: 'apply'
+    arguments: |
+      -f $(Build.ArtifactStagingDirectory)/deployment/pages-namespace.yaml
+      -f $(Build.ArtifactStagingDirectory)/deployment/pages-service.yaml
+      -f $(Build.ArtifactStagingDirectory)/deployment/pages-config.yaml
+      -f $(Build.ArtifactStagingDirectory)/deployment/pages-deployment.yaml
