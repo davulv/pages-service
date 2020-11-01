@@ -41,8 +41,8 @@ steps:
     kubernetesServiceEndpoint: 'k8-conn'
     namespace: 'davulv'
     command: 'apply'
-    arguments: |
-      -f $(Build.ArtifactStagingDirectory)/deployment/pages-namespace.yaml
+    arguments: | 
+      -f $(Build.ArtifactStagingDirectory)/deployment/pages-namespace.yaml |
       -f $(Build.ArtifactStagingDirectory)/deployment/pages-service.yaml
       -f $(Build.ArtifactStagingDirectory)/deployment/pages-config.yaml
       -f $(Build.ArtifactStagingDirectory)/deployment/pages-deployment.yaml
