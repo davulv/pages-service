@@ -35,6 +35,7 @@ steps:
 - task: KubectlInstaller@0
   inputs:
     kubectlVersion: 'latest'
+- bash: az aks get-credentials --resource-group my-resource-group --name k8Cluster
 - task: Kubernetes@1
   inputs:
     connectionType: 'Kubernetes Service Connection'
