@@ -35,14 +35,17 @@ steps:
 - task: KubectlInstaller@0
   inputs:
     kubectlVersion: 'latest'
-- bash: az aks get-credentials --resource-group my-resource-group --name k8Cluster
+
 - task: Kubernetes@1
   inputs:
-    connectionType: 'Kubernetes Service Connection'
-    kubernetesServiceEndpoint: 'k8-conn'
+    connectionType: 'Azure Resource Manager'
+    azureSubscriptionEndpoint: 'MSDN Platforms Subscription(f4c6dc02-01e5-4253-a13b-67175f4fd724)'
+    azureResourceGroup: 'my-resource-group'
+    kubernetesCluster: 'k8Cluster'
+    useClusterAdmin: true
     namespace: 'davulv'
     command: 'apply'
-    arguments: 
+    arguments: |
       -f $(Build.ArtifactStagingDirectory)/deployment/pages-namespace.yaml -f $(Build.ArtifactStagingDirectory)/deployment/pages-service.yaml
-      -f $(Build.ArtifactStagingDirectory)/deployment/pages-config.yaml
-      -f $(Build.ArtifactStagingDirectory)/deployment/pages-deployment.yaml
+            -f $(Build.ArtifactStagingDirectory)/deployment/pages-config.yaml
+            -f $(Build.ArtifactStagingDirectory)/deployment/pages-deployment.yaml
