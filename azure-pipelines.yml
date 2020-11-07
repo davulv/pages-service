@@ -16,7 +16,7 @@ steps:
     script: |
       sudo apt update
       sudo apt install mysql-server
-      mysqld --skip-grant-tables
+      sudo mysqld --skip-grant-tables
       mysql -u root mysql
       UPDATE  mysql.user SET Password = PASSWORD('test@123') WHERE User = 'root';
       FLUSH PRIVILEGES;
