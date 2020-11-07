@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: pages
+    servicefor: pages
   name: pages
   namespace: davulv
 spec:
@@ -10,20 +11,44 @@ spec:
   selector:
     matchLabels:
       app: pages
+      servicefor: pages
   strategy: {}
   template:
     metadata:
       labels:
         app: pages
+        servicefor: pages
     spec:
+      volumes:
+      - name: log-volume
+        emptyDir: {}
       containers:
-        - image: davulv/pages-service:config
-          name: pages
-          ports:
-            - containerPort: 8080
-          env:
-            - name: PAGE_CONTENT
-              valueFrom:
-                configMapKeyRef:
-                  name: pages-config-map
-                  key: PAGE_CONTENT
+      - image: davulv/pages-service:logging
+        imagePullPolicy: Always
+        name: pages
+        ports:
+          - containerPort: 8080
+        env:
+        - name: PAGE_CONTENT
+          valueFrom:
+              configMapKeyRef:
+                name: pages-config-map
+                key: PAGE_CONTENT
+        volumeMounts:
+        - name: log-volume
+          mountPath: "/var/tmp/"
+        readinessProbe:
+          tcpSocket:
+           port: 8080
+          initialDelaySeconds: 100
+          periodSeconds: 5
+          successThreshold: 2
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 150
+          periodSeconds: 5
+          successThreshold: 1
+        resources: {}
+status: {}
