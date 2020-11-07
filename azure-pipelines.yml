@@ -20,7 +20,7 @@ steps:
       use pages;
     ServerName: localhost
     SqlUsername: root
-    SqlPassword:       
+    SqlPassword: root      
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
