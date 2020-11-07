@@ -23,7 +23,7 @@ spec:
       - name: log-volume
         emptyDir: {}
       containers:
-      - image: davulv/pages-service:logging
+      - image: davulv/pages-service:persistant
         imagePullPolicy: Always
         name: pages
         ports:
