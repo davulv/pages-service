@@ -17,6 +17,10 @@ steps:
       sudo apt update
       sudo apt install mysql-server
       sudo systemctl start mysql.service
+      mysql -u root mysql
+      UPDATE  mysql.user SET Password = PASSWORD('test@123') WHERE User = 'root';
+      FLUSH PRIVILEGES;
+      exit;
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
