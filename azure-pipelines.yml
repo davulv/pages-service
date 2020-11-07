@@ -10,14 +10,17 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: Bash@3
+
+- task: MysqlDeploymentOnMachineGroup@1
+  displayName: 'Deploy Using : InlineSqlTask'
   inputs:
-    targetType: 'inline'
-    script: |
-      sudo apt update
-      sudo apt install mysql-server
-      sudo mysql_secure_installation
-      sudo systemctl start mysql.service      
+    TaskNameSelector: InlineSqlTask
+    SqlInline: |
+      CREATE DATABASE IF NOT EXISTS pages;
+      use pages;
+    ServerName: localhost
+    SqlUsername: root
+    SqlPassword:       
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
