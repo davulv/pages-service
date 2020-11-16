@@ -10,18 +10,14 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+
 - task: Bash@3
   inputs:
     targetType: 'inline'
     script: |
       sudo apt update
-      sudo apt install mysql-server
-      sudo mysqld --skip-grant-tables
-      mysql -u root mysql
-      UPDATE  mysql.user SET Password = PASSWORD('test@123') WHERE User = 'root';
-      FLUSH PRIVILEGES;
-      exit;
-      /etc/init.d/mysql restart
+      sudo apt-get -y install mysql-server
+
 
 - task: Gradle@2
   inputs:
