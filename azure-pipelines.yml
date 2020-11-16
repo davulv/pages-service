@@ -23,7 +23,7 @@ steps:
       sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password test123'
       sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password test123'
       sudo apt-get -y install mysql-server
-      sudo mysql
+      sudo mysql -u root
       GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY 'test123' WITH GRANT OPTION;
       exit;
 
