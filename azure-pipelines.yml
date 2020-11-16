@@ -17,7 +17,7 @@ steps:
     script: |
       sudo apt update
       sudo apt-get -y install mysql-server
-      service mysql start
+      systemctl status mysql.service
 
 
 - task: Gradle@2
